@@ -1,0 +1,2683 @@
+{
+  "name": "Casa Marindo Hotel Group - New Employee Onboarding",
+  "nodes": [
+    {
+      "id": "b6319844-151c-4e0e-8ae4-5dd5111569c4",
+      "name": "New Hire Intake Form",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        320
+      ],
+      "parameters": {
+        "formTitle": "Casa Marindo Hotel Group - New Hire Onboarding",
+        "formDescription": "HR team only. Submitting this sets up the new hire's hotel system access and key card, requests their documents, adds them to the shift schedule and sends all onboarding emails.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full name",
+              "fieldName": "fullName",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Personal email",
+              "fieldType": "email",
+              "fieldName": "personalEmail",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Proposed work email",
+              "fieldType": "email",
+              "fieldName": "workEmail"
+            },
+            {
+              "fieldLabel": "Role",
+              "fieldType": "dropdown",
+              "fieldName": "role",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Front Desk Agent"
+                  },
+                  {
+                    "option": "Housekeeping Supervisor"
+                  },
+                  {
+                    "option": "F&B Server"
+                  },
+                  {
+                    "option": "Duty Manager"
+                  },
+                  {
+                    "option": "Maintenance Technician"
+                  },
+                  {
+                    "option": "Other"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Department",
+              "fieldType": "dropdown",
+              "fieldName": "department",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Front Office"
+                  },
+                  {
+                    "option": "Housekeeping"
+                  },
+                  {
+                    "option": "Food & Beverage"
+                  },
+                  {
+                    "option": "Engineering & Maintenance"
+                  },
+                  {
+                    "option": "Operations"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Property",
+              "fieldName": "property",
+              "placeholder": "e.g. Casa Marindo Bayfront",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Shift manager email",
+              "fieldType": "email",
+              "fieldName": "managerEmail",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "City",
+              "fieldName": "location"
+            },
+            {
+              "fieldLabel": "Start date",
+              "fieldType": "date",
+              "fieldName": "startDate",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Employment type",
+              "fieldType": "dropdown",
+              "fieldName": "employmentType",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Full-time"
+                  },
+                  {
+                    "option": "Part-time"
+                  },
+                  {
+                    "option": "Seasonal"
+                  },
+                  {
+                    "option": "Casual / on-call"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Uniform size",
+              "fieldType": "dropdown",
+              "fieldName": "uniformSize",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "XS"
+                  },
+                  {
+                    "option": "S"
+                  },
+                  {
+                    "option": "M"
+                  },
+                  {
+                    "option": "L"
+                  },
+                  {
+                    "option": "XL"
+                  },
+                  {
+                    "option": "XXL"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "buttonLabel": "Start onboarding",
+          "path": "new-hire-intake",
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "Onboarding started. IT, the manager and the new hire have all been notified."
+            }
+          },
+          "ignoreBots": true,
+          "useWorkflowTimezone": true
+        }
+      }
+    },
+    {
+      "id": "8b2c092d-021a-47a2-904b-e325ac904c63",
+      "name": "Clean Up New Hire Details",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        320
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "h1",
+              "name": "fullName",
+              "value": "={{ ($json.fullName ?? \"\").trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "h2",
+              "name": "personalEmail",
+              "value": "={{ ($json.personalEmail ?? \"\").trim().toLowerCase() }}",
+              "type": "string"
+            },
+            {
+              "id": "h3",
+              "name": "workEmail",
+              "value": "={{ ($json.workEmail ?? \"\").trim().toLowerCase() }}",
+              "type": "string"
+            },
+            {
+              "id": "h4",
+              "name": "role",
+              "value": "={{ $json.role ?? \"Other\" }}",
+              "type": "string"
+            },
+            {
+              "id": "h5",
+              "name": "department",
+              "value": "={{ ($json.department ?? \"\").trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "h6",
+              "name": "managerEmail",
+              "value": "={{ ($json.managerEmail ?? \"\").trim().toLowerCase() }}",
+              "type": "string"
+            },
+            {
+              "id": "h7",
+              "name": "location",
+              "value": "={{ $json.location ?? \"\" }}",
+              "type": "string"
+            },
+            {
+              "id": "h8",
+              "name": "startDate",
+              "value": "={{ $json.startDate ?? \"\" }}",
+              "type": "string"
+            },
+            {
+              "id": "h9",
+              "name": "employmentType",
+              "value": "={{ $json.employmentType ?? \"Full-time\" }}",
+              "type": "string"
+            },
+            {
+              "id": "h10",
+              "name": "submittedAt",
+              "value": "={{ $now.toUTC().toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "h11",
+              "name": "executionId",
+              "value": "={{ $execution.id }}",
+              "type": "string"
+            },
+            {
+              "id": "h12",
+              "name": "property",
+              "value": "={{ ($json.property ?? \"\").trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "h13",
+              "name": "uniformSize",
+              "value": "={{ $json.uniformSize ?? \"\" }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "449a9215-86ac-449f-9e81-2a748101186a",
+      "name": "Details Complete?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        320
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.personalEmail }}",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              },
+              "rightValue": "@"
+            },
+            {
+              "leftValue": "={{ $json.managerEmail }}",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              },
+              "rightValue": "@"
+            },
+            {
+              "leftValue": "={{ $json.startDate }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "2fbf0223-0cd9-401b-9be5-9fcb83204017",
+      "name": "Generate Onboarding Plan",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        304
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const h = $json;\nconst role = String(h.role || 'Other');\n\n// Tasks every new hire gets. dueOffsetDays = days before (-) or after (+) the start date\nconst commonTasks = [\n  { title: 'Create hotel system (PMS) login and set permissions', owner: 'IT', dueOffsetDays: -3 },\n  { title: 'Issue key card and set which doors it opens', owner: 'IT', dueOffsetDays: -2 },\n  { title: 'Order uniform in the confirmed size', owner: 'HR', dueOffsetDays: -5 },\n  { title: 'Add to payroll and benefits', owner: 'HR', dueOffsetDays: -2 },\n  { title: 'Add to shift schedule', owner: 'Manager', dueOffsetDays: -2 },\n  { title: 'Assign an onboarding buddy on the same shifts', owner: 'Manager', dueOffsetDays: -2 },\n  { title: 'Hotel tour and fire exit walkthrough', owner: 'HR', dueOffsetDays: 0 },\n  { title: 'Health and safety training', owner: 'HR', dueOffsetDays: 0 }\n];\n\n// Extra tasks by role\nconst roleTasks = {\n  'Front Desk Agent': [\n    { title: 'Give front desk access in hotel system (check-in, guest bills, room assignments)', owner: 'IT', dueOffsetDays: -1 },\n    { title: 'Set up phone extension and headset', owner: 'IT', dueOffsetDays: -1 },\n    { title: 'Cash drawer and end-of-shift cash-up training', owner: 'Manager', dueOffsetDays: 1 },\n    { title: 'Briefing on handling guest complaints', owner: 'Manager', dueOffsetDays: 2 }\n  ],\n  'Housekeeping Supervisor': [\n    { title: 'Give housekeeping access in hotel system (room status)', owner: 'IT', dueOffsetDays: -1 },\n    { title: 'Briefing on linen and supply stock levels', owner: 'Manager', dueOffsetDays: 1 },\n    { title: 'Walkthrough of room inspection standards', owner: 'Manager', dueOffsetDays: 2 },\n    { title: 'Chemical safety handling certificate', owner: 'HR', dueOffsetDays: 3 }\n  ],\n  'F&B Server': [\n    { title: 'Set up restaurant till (POS) access and server PIN', owner: 'IT', dueOffsetDays: -1 },\n    { title: 'Check food handler certificate is valid', owner: 'HR', dueOffsetDays: -1 },\n    { title: 'Food allergy awareness training', owner: 'HR', dueOffsetDays: 1 },\n    { title: 'Responsible alcohol serving briefing', owner: 'Manager', dueOffsetDays: 1 }\n  ],\n  'Duty Manager': [\n    { title: 'Give manager override and room rate access in hotel system', owner: 'IT', dueOffsetDays: -1 },\n    { title: 'Master key handling and sign-out rules', owner: 'Manager', dueOffsetDays: 0 },\n    { title: 'Incident and emergency procedures briefing', owner: 'HR', dueOffsetDays: 1 },\n    { title: 'Walkthrough of the overnight accounts check (night audit)', owner: 'Manager', dueOffsetDays: 4 }\n  ],\n  'Maintenance Technician': [\n    { title: 'Give access to the repair request system', owner: 'IT', dueOffsetDays: -1 },\n    { title: 'Issue plant room and roof access permits', owner: 'IT', dueOffsetDays: -1 },\n    { title: 'Equipment lock-off safety certificate (lockout-tagout)', owner: 'HR', dueOffsetDays: 2 },\n    { title: 'Procedure for escorting contractors and work permits', owner: 'Manager', dueOffsetDays: 3 }\n  ]\n};\n\nconst extra = roleTasks[role] || [{ title: 'Confirm role-specific system access with department head', owner: 'Manager', dueOffsetDays: -1 }];\nconst allTasks = commonTasks.concat(extra);\n\n// Documents the new hire must upload\nconst baseDocs = ['Government ID', 'Right to work document', 'Tax form', 'Bank details', 'Signed contract'];\nif (role === 'F&B Server') { baseDocs.push('Food handler certificate'); baseDocs.push('Alcohol service certificate'); }\nif (role === 'Housekeeping Supervisor') { baseDocs.push('Chemical handling certificate'); }\nif (role === 'Maintenance Technician') { baseDocs.push('Trade qualification certificate'); }\nif (role === 'Duty Manager') { baseDocs.push('Confidentiality agreement'); }\nif (String(h.employmentType) === 'Casual / on-call' || String(h.employmentType) === 'Seasonal') { baseDocs.push('Availability declaration'); }\n\nconst start = new Date(h.startDate);\nconst planTasks = [];\nfor (let i = 0; i < allTasks.length; i++) {\n  const t = allTasks[i];\n  const due = new Date(start.getTime() + (t.dueOffsetDays * 86400000));\n  planTasks.push({\n    // Unique per person + task, so resubmitting the form updates instead of duplicating\n    taskKey: h.personalEmail + '::' + t.title,\n    employeeEmail: h.personalEmail,\n    title: t.title,\n    owner: t.owner,\n    dueDate: due.toISOString().slice(0, 10),\n    status: 'open'\n  });\n}\n\nconst planDocuments = [];\nfor (let j = 0; j < baseDocs.length; j++) {\n  planDocuments.push({\n    employeeEmail: h.personalEmail,\n    documentName: baseDocs[j],\n    documentKey: h.personalEmail + '::' + baseDocs[j],\n    status: 'outstanding'\n  });\n}\n\nreturn {\n  json: {\n    fullName: h.fullName,\n    personalEmail: h.personalEmail,\n    workEmail: h.workEmail,\n    role: role,\n    department: h.department,\n    property: h.property || '',\n    uniformSize: h.uniformSize || '',\n    managerEmail: h.managerEmail,\n    location: h.location,\n    startDate: h.startDate,\n    employmentType: h.employmentType,\n    submittedAt: h.submittedAt,\n    executionId: h.executionId,\n    taskCount: planTasks.length,\n    documentCount: planDocuments.length,\n    planTasks: planTasks,\n    planDocuments: planDocuments\n  }\n};"
+      }
+    },
+    {
+      "id": "dbb387bd-302a-4705-a142-183c9216759c",
+      "name": "Alert HR - Form Incomplete",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "position": [
+        448,
+        512
+      ],
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_SLACK_CHANNEL_ID"
+        },
+        "text": "=:warning: *New hire form is incomplete - onboarding NOT started*\nName: {{ $('Clean Up New Hire Details').item.json.fullName }}\nPersonal email: {{ $('Clean Up New Hire Details').item.json.personalEmail }}\nManager email: {{ $('Clean Up New Hire Details').item.json.managerEmail }}\nStart date: {{ $('Clean Up New Hire Details').item.json.startDate }}\n\nA valid personal email, manager email and start date are all needed. Please submit the form again.",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "b3142ad6-4c40-4850-8df8-36dfd2c73856",
+      "name": "Create Onboarding Folder",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueRegularOutput",
+      "position": [
+        960,
+        160
+      ],
+      "parameters": {
+        "resource": "folder",
+        "name": "=Onboarding - {{ $json.fullName }} - {{ $json.startDate }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_DRIVE_ID"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_DRIVE_FOLDER_ID",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {
+          "simplifyOutput": true
+        }
+      }
+    },
+    {
+      "id": "19f3456e-0df8-43f6-ae46-7c0d2f746965",
+      "name": "Create Employee Record",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "position": [
+        1184,
+        160
+      ],
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_BASE_ID",
+          "cachedResultName": "Casa Marindo Onboarding"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_AIRTABLE_TABLE_ID",
+          "cachedResultName": "Employees"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "personalEmail"
+          ],
+          "value": {
+            "personalEmail": "={{ $('Generate Onboarding Plan').item.json.personalEmail }}",
+            "fullName": "={{ $('Generate Onboarding Plan').item.json.fullName }}",
+            "workEmail": "={{ $('Generate Onboarding Plan').item.json.workEmail }}",
+            "role": "={{ $('Generate Onboarding Plan').item.json.role }}",
+            "department": "={{ $('Generate Onboarding Plan').item.json.department }}",
+            "managerEmail": "={{ $('Generate Onboarding Plan').item.json.managerEmail }}",
+            "location": "={{ $('Generate Onboarding Plan').item.json.location }}",
+            "startDate": "={{ $('Generate Onboarding Plan').item.json.startDate }}",
+            "employmentType": "={{ $('Generate Onboarding Plan').item.json.employmentType }}",
+            "taskCount": "={{ $('Generate Onboarding Plan').item.json.taskCount }}",
+            "documentCount": "={{ $('Generate Onboarding Plan').item.json.documentCount }}",
+            "folderUrl": "={{ $json.id ? \"https://drive.google.com/drive/folders/\" + $json.id : \"\" }}",
+            "status": "in_progress",
+            "createdAt": "={{ $now.toUTC().toISO() }}",
+            "property": "={{ $('Generate Onboarding Plan').item.json.property }}",
+            "uniformSize": "={{ $('Generate Onboarding Plan').item.json.uniformSize }}"
+          }
+        },
+        "options": {
+          "typecast": true
+        }
+      }
+    },
+    {
+      "id": "1e085359-2706-40cb-bdd8-4f5bc44f142c",
+      "name": "Book Day 1 Orientation",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueRegularOutput",
+      "position": [
+        1408,
+        160
+      ],
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_CALENDAR_ID",
+          "cachedResultName": "Primary calendar"
+        },
+        "start": "={{ $('Generate Onboarding Plan').item.json.startDate }}T09:00:00",
+        "end": "={{ $('Generate Onboarding Plan').item.json.startDate }}T10:30:00",
+        "additionalFields": {
+          "attendees": [
+            "={{ $('Generate Onboarding Plan').item.json.personalEmail }}",
+            "={{ $('Generate Onboarding Plan').item.json.managerEmail }}"
+          ],
+          "description": "=Welcome session for {{ $('Generate Onboarding Plan').item.json.fullName }} joining {{ $('Generate Onboarding Plan').item.json.department }} as {{ $('Generate Onboarding Plan').item.json.role }}.\n\nOnboarding folder: {{ $('Create Employee Record').item.json.fields.folderUrl }}",
+          "sendUpdates": "all",
+          "summary": "=Day 1 Orientation - {{ $('Generate Onboarding Plan').item.json.fullName }}"
+        }
+      }
+    },
+    {
+      "id": "ed386758-ecc3-4969-b00e-38095f99ca92",
+      "name": "Notify IT And Manager",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueRegularOutput",
+      "position": [
+        1632,
+        160
+      ],
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_SLACK_CHANNEL_ID"
+        },
+        "text": "=:hotel: *New hire onboarding started - Casa Marindo Hotel Group*\n\n*{{ $('Generate Onboarding Plan').item.json.fullName }}* - {{ $('Generate Onboarding Plan').item.json.role }}, {{ $('Generate Onboarding Plan').item.json.department }}\nHotel: *{{ $('Generate Onboarding Plan').item.json.property }}*\nStart date: *{{ $('Generate Onboarding Plan').item.json.startDate }}*\nShift manager: {{ $('Generate Onboarding Plan').item.json.managerEmail }}\nUniform size: {{ $('Generate Onboarding Plan').item.json.uniformSize }}\n\n:clipboard: *{{ $('Generate Onboarding Plan').item.json.taskCount }} tasks* created - hotel system access, key card, uniform, shift schedule, certificates\n:page_facing_up: *{{ $('Generate Onboarding Plan').item.json.documentCount }} documents* requested from the new hire\n:file_folder: {{ $('Create Employee Record').item.json.fields.folderUrl }}\n\nIT: tick *itProvisioned* in Airtable once hotel system access and the key card are set up - otherwise you'll get a reminder every morning.",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "21b82bdd-2f77-47c3-b5fc-e697ade6cc47",
+      "name": "Send Welcome Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueRegularOutput",
+      "position": [
+        1856,
+        160
+      ],
+      "parameters": {
+        "sendTo": "={{ $('Generate Onboarding Plan').item.json.personalEmail }}",
+        "subject": "=Welcome to the team, {{ $('Generate Onboarding Plan').item.json.fullName }}",
+        "emailType": "text",
+        "message": "=Hi {{ $('Generate Onboarding Plan').item.json.fullName }},\n\nWelcome to Casa Marindo Hotel Group. We're looking forward to you joining {{ $('Generate Onboarding Plan').item.json.department }} at {{ $('Generate Onboarding Plan').item.json.property }} as {{ $('Generate Onboarding Plan').item.json.role }} on {{ $('Generate Onboarding Plan').item.json.startDate }}.\n\nBefore your first shift, please upload these {{ $('Generate Onboarding Plan').item.json.documentCount }} documents:\n{{ $('Generate Onboarding Plan').item.json.planDocuments.map(d => '- ' + d.documentName).join('\\n') }}\n\nUpload them here, one at a time, using this email address:\nhttps://your-n8n-instance.example.com/form/onboarding-document-upload\n\nYour uniform has been ordered in size {{ $('Generate Onboarding Plan').item.json.uniformSize }}. Your hotel tour and fire exit walkthrough are already in the calendar, and your shift manager has been told you're coming.\n\nIf you have questions about your shift schedule, breaks, tips or benefits before you start, just reply to this email and the People Team will help.\n\nSee you soon,\nThe People Team\nCasa Marindo Hotel Group",
+        "options": {
+          "appendAttribution": false
+        }
+      }
+    },
+    {
+      "id": "ef1f9285-aa7d-450e-b1d5-d1a114f55b63",
+      "name": "Log Onboarding Started",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueRegularOutput",
+      "position": [
+        2080,
+        160
+      ],
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "cachedResultName": "Onboarding Automation"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Onboarding Log"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "submittedAt": "={{ $('Generate Onboarding Plan').item.json.submittedAt }}",
+            "fullName": "={{ $('Generate Onboarding Plan').item.json.fullName }}",
+            "personalEmail": "={{ $('Generate Onboarding Plan').item.json.personalEmail }}",
+            "role": "={{ $('Generate Onboarding Plan').item.json.role }}",
+            "department": "={{ $('Generate Onboarding Plan').item.json.department }}",
+            "startDate": "={{ $('Generate Onboarding Plan').item.json.startDate }}",
+            "taskCount": "={{ $('Generate Onboarding Plan').item.json.taskCount }}",
+            "documentCount": "={{ $('Generate Onboarding Plan').item.json.documentCount }}",
+            "executionId": "={{ $execution.id }}"
+          },
+          "schema": [
+            {
+              "id": "submittedAt",
+              "displayName": "submittedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "fullName",
+              "displayName": "fullName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "personalEmail",
+              "displayName": "personalEmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "role",
+              "displayName": "role",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "department",
+              "displayName": "department",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "startDate",
+              "displayName": "startDate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "taskCount",
+              "displayName": "taskCount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "documentCount",
+              "displayName": "documentCount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "executionId",
+              "displayName": "executionId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {
+          "cellFormat": "RAW"
+        }
+      }
+    },
+    {
+      "id": "96f4bb29-53d6-4d13-872f-d54b689bc5dd",
+      "name": "One Row Per Task",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        960,
+        496
+      ],
+      "parameters": {
+        "fieldToSplitOut": "planTasks",
+        "options": {}
+      }
+    },
+    {
+      "id": "21b95c8d-4fe3-446e-adac-41388eb85095",
+      "name": "Save Tasks To Airtable",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueRegularOutput",
+      "position": [
+        1184,
+        496
+      ],
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_BASE_ID",
+          "cachedResultName": "Casa Marindo Onboarding"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_AIRTABLE_TABLE_ID",
+          "cachedResultName": "Onboarding Tasks"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "taskKey"
+          ],
+          "value": {
+            "dueDate": "={{ $json.dueDate }}",
+            "employeeEmail": "={{ $json.employeeEmail }}",
+            "owner": "={{ $json.owner }}",
+            "taskKey": "={{ $json.taskKey }}",
+            "title": "={{ $json.title }}"
+          }
+        },
+        "options": {
+          "typecast": true
+        }
+      }
+    },
+    {
+      "id": "045b7239-73ea-47e4-9a89-e30aaed57214",
+      "name": "Save Document Checklist To Airtable",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueRegularOutput",
+      "position": [
+        1648,
+        640
+      ],
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_BASE_ID",
+          "cachedResultName": "Casa Marindo Onboarding"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_AIRTABLE_TABLE_ID",
+          "cachedResultName": "Onboarding Documents"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "documentKey"
+          ],
+          "value": {
+            "documentKey": "={{ $json.documentKey }}",
+            "employeeEmail": "={{ $json.employeeEmail }}",
+            "documentName": "={{ $json.documentName }}",
+            "status": "outstanding",
+            "requestedAt": "={{ $now.toUTC().toISO() }}"
+          }
+        },
+        "options": {
+          "typecast": true
+        }
+      }
+    },
+    {
+      "id": "7221d270-32b4-487a-a630-e51787a65e17",
+      "name": "Document Upload Form",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        1008
+      ],
+      "parameters": {
+        "formTitle": "Casa Marindo Hotel Group - Upload an onboarding document",
+        "formDescription": "Use the email address your welcome message was sent to.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Your personal email",
+              "fieldType": "email",
+              "fieldName": "employeeEmail",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Which document is this?",
+              "fieldType": "dropdown",
+              "fieldName": "documentName",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Government ID"
+                  },
+                  {
+                    "option": "Right to work document"
+                  },
+                  {
+                    "option": "Tax form"
+                  },
+                  {
+                    "option": "Bank details"
+                  },
+                  {
+                    "option": "Signed contract"
+                  },
+                  {
+                    "option": "Food handler certificate"
+                  },
+                  {
+                    "option": "Alcohol service certificate"
+                  },
+                  {
+                    "option": "Chemical handling certificate"
+                  },
+                  {
+                    "option": "Trade qualification certificate"
+                  },
+                  {
+                    "option": "Confidentiality agreement"
+                  },
+                  {
+                    "option": "Availability declaration"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "File",
+              "fieldType": "file",
+              "fieldName": "document",
+              "multipleFiles": false,
+              "acceptFileTypes": ".pdf,.jpg,.jpeg,.png",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "buttonLabel": "Upload",
+          "path": "onboarding-document-upload",
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "Received. Thank you - we will let you know if anything else is outstanding."
+            }
+          },
+          "ignoreBots": true
+        }
+      }
+    },
+    {
+      "id": "2a0b6f62-9b95-4530-a283-c68411cfd25b",
+      "name": "Mark Document Received",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "position": [
+        1120,
+        992
+      ],
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_BASE_ID",
+          "cachedResultName": "Casa Marindo Onboarding"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_AIRTABLE_TABLE_ID",
+          "cachedResultName": "Onboarding Documents"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "documentKey"
+          ],
+          "value": {
+            "documentKey": "={{ String($('Document Upload Form').item.json.employeeEmail ?? '').trim().toLowerCase() }}::{{ $('Document Upload Form').item.json.documentName }}",
+            "documentName": "={{ $('Document Upload Form').item.json.documentName }}",
+            "employeeEmail": "={{ String($('Document Upload Form').item.json.employeeEmail ?? '').trim().toLowerCase() }}",
+            "fileUrl": "={{ $json.id ? 'https://drive.google.com/file/d/' + $json.id + '/view' : '' }}",
+            "receivedAt": "={{ $now.toUTC().toISO() }}",
+            "status": "received"
+          }
+        },
+        "options": {
+          "typecast": true
+        }
+      }
+    },
+    {
+      "id": "958fe58f-7910-4736-a0a7-b6523ca0a612",
+      "name": "Notify HR - Document Received",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 2000,
+      "onError": "continueRegularOutput",
+      "position": [
+        1344,
+        992
+      ],
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_SLACK_CHANNEL_ID"
+        },
+        "text": "=:inbox_tray: *Onboarding document received*\n{{ $('Document Upload Form').item.json.documentName }} from {{ $('Document Upload Form').item.json.employeeEmail }}",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "9459b649-e1ea-49e9-a8a9-411aa4e5f8e4",
+      "name": "Every Day At 8:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        1680
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "85145b00-4000-4c92-b7a6-22470a378c74",
+      "name": "Find People Still Onboarding Records",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueRegularOutput",
+      "position": [
+        192,
+        1680
+      ],
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_BASE_ID",
+          "cachedResultName": "Casa Marindo Onboarding"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_AIRTABLE_TABLE_ID",
+          "cachedResultName": "Employees"
+        },
+        "filterByFormula": "NOT({status} = \"complete\")",
+        "returnAll": false,
+        "limit": 50,
+        "options": {},
+        "sort": {
+          "property": [
+            {
+              "field": "startDate"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "caa1a5c0-532f-4ec3-be57-be53a7575a1e",
+      "name": "Find Missing Document Records",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueRegularOutput",
+      "position": [
+        512,
+        1680
+      ],
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_BASE_ID",
+          "cachedResultName": "Casa Marindo Onboarding"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_AIRTABLE_TABLE_ID",
+          "cachedResultName": "Onboarding Documents"
+        },
+        "filterByFormula": "{status} = \"outstanding\"",
+        "options": {}
+      }
+    },
+    {
+      "id": "b6914a9e-5694-4b0d-ae66-1366aeb8423b",
+      "name": "Decide Action For Today",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        928,
+        1680
+      ],
+      "parameters": {
+        "jsCode": "const employees = $('Find People Still Onboarding').all();\nconst docRows = $('Find Missing Documents').all();\n\n// All outstanding documents, grouped by employee email.\n// Fetched once per run so nobody drops out of the daily check.\nconst missingByEmail = {};\nfor (const r of docRows) {\n  const d = r.json || {};\n  if (!d.id || !d.employeeEmail) continue;\n  const key = String(d.employeeEmail).toLowerCase();\n  if (!missingByEmail[key]) missingByEmail[key] = [];\n  missingByEmail[key].push(d.documentName || 'document');\n}\n\nconst DAY = 86400000;\n// Day 0 = start date (orientation day)\nconst milestoneDays = [-7, 0, 3, 7, 30];\nconst helpLine = 'If you have a question about policy, leave, benefits or expenses, just reply to this email and the People Team will help.';\nconst out = [];\n\nfor (const e of employees) {\n  const emp = e.json || {};\n  if (!emp.personalEmail) continue;\n\n  const missing = missingByEmail[String(emp.personalEmail).toLowerCase()] || [];\n  const hasOutstandingDocs = missing.length > 0;\n\n  const startMs = new Date(emp.startDate).getTime();\n  let dayOffset = 9999;\n  if (!isNaN(startMs)) { dayOffset = Math.floor((Date.now() - startMs) / DAY); }\n\n  const itDone = emp.itProvisioned === true || String(emp.itProvisioned).toLowerCase() === 'true';\n\n  const base = {\n    employeeRecordId: emp.id,\n    personalEmail: emp.personalEmail,\n    fullName: emp.fullName,\n    role: emp.role,\n    department: emp.department,\n    managerEmail: emp.managerEmail,\n    startDate: emp.startDate,\n    itProvisioned: itDone,\n    hasOutstandingDocs: hasOutstandingDocs,\n    outstandingDocs: missing.join(', '),\n    dayOffset: dayOffset,\n    emailSubject: '',\n    emailBody: ''\n  };\n\n  // 1) At most ONE email to the new hire per day.\n  //    Milestone days win, and the missing-documents note rides along in the same email.\n  const isMilestone = milestoneDays.indexOf(dayOffset) > -1;\n  const docsNote = hasOutstandingDocs ? '\\n\\nStill needed from you: ' + missing.join(', ') + '. Please upload them using the link below, one document at a time.' : '';\n\n  if (isMilestone) {\n    let subject = '';\n    let body = '';\n    if (dayOffset === -7) {\n      subject = 'One week to go';\n      body = 'Your first day is a week away. Your accounts are being prepared, and your day-one orientation is already in your calendar.';\n    } else if (dayOffset === 0) {\n      subject = 'Welcome - today is your first day';\n      body = 'Welcome. Your orientation session is today at 9:00. Your manager and onboarding buddy are expecting you.';\n    } else if (dayOffset === 3) {\n      subject = 'Resources for your first week';\n      body = 'A few things worth bookmarking this week: the handbook, the benefits portal, and the expense process. If you are unsure about any policy, ask the People Team rather than guessing.';\n    } else if (dayOffset === 7) {\n      subject = 'How is week one going?';\n      body = 'You have been here a week. Is anything still blocking you - access, equipment, or clarity on your duties? Reply to this email and we will sort it.';\n    } else if (dayOffset === 30) {\n      subject = 'Your 30-day check-in';\n      body = 'You are a month in. We would like your honest view on how onboarding went - what helped, and what was missing. Your answer improves things for the next person.';\n    }\n    out.push({ json: Object.assign({}, base, {\n      actionType: 'milestone_email',\n      reason: 'day ' + dayOffset + ' check-in email' + (hasOutstandingDocs ? ' (with missing-documents note)' : ''),\n      emailSubject: subject,\n      emailBody: body + docsNote + '\\n\\n' + helpLine\n    }), pairedItem: { item: 0 } });\n  } else if (hasOutstandingDocs && dayOffset >= -7) {\n    out.push({ json: Object.assign({}, base, {\n      actionType: 'chase_documents',\n      reason: missing.length + ' required document(s) still missing',\n      emailSubject: 'Still needed before your first day',\n      emailBody: 'We are still missing these onboarding documents from you: ' + missing.join(', ') + '.\\n\\nPlease upload them using the document upload form, one document at a time.\\n\\nPayroll and system access cannot be finished until these are in, so the sooner the better.'\n    }), pairedItem: { item: 0 } });\n  }\n\n  // 2) IT reminder goes to Slack, not the new hire, so it runs alongside the email.\n  //    Missing documents must never hold up the key card and system access chase.\n  if (dayOffset >= 0 && !itDone) {\n    out.push({ json: Object.assign({}, base, {\n      actionType: 'chase_it',\n      reason: 'employee has started but IT has not confirmed system access and key card'\n    }), pairedItem: { item: 0 } });\n  }\n\n  // 3) Close out once everything is done.\n  if (dayOffset >= 30 && itDone && !hasOutstandingDocs) {\n    out.push({ json: Object.assign({}, base, {\n      actionType: 'mark_complete',\n      reason: '30 days in, all documents received, IT confirmed'\n    }), pairedItem: { item: 0 } });\n  }\n}\n\nreturn out;"
+      }
+    },
+    {
+      "id": "17269415-c621-4227-9c06-5540b9da4ea6",
+      "name": "Route By Action",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1136,
+        1648
+      ],
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.actionType }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "chase_documents"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Chase missing documents"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.actionType }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "milestone_email"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Milestone email"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.actionType }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "chase_it"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Remind IT"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.actionType }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "mark_complete"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Mark complete"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "f12496db-33a6-4cb7-ae6e-b8a1b628e716",
+      "name": "Email New Hire",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueRegularOutput",
+      "position": [
+        1568,
+        1568
+      ],
+      "parameters": {
+        "sendTo": "={{ $json.personalEmail }}",
+        "subject": "={{ $json.emailSubject }}",
+        "emailType": "text",
+        "message": "=Hi {{ $json.fullName }},\n\n{{ $json.emailBody }}{{ $json.hasOutstandingDocs ? '\\n\\nUpload link: https://your-n8n-instance.example.com/form/onboarding-document-upload' : '' }}\n\nThe People Team",
+        "options": {
+          "appendAttribution": false
+        }
+      }
+    },
+    {
+      "id": "95f2f993-b3e1-4e90-a7fb-d2f0a612355c",
+      "name": "Remind IT - Access & Key Card Overdue",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueRegularOutput",
+      "position": [
+        1568,
+        1760
+      ],
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_SLACK_CHANNEL_ID"
+        },
+        "text": "=:hourglass_flowing_sand: *IT setup still not confirmed*\n\n*{{ $json.fullName }}* ({{ $json.role }}, {{ $json.department }}) started {{ $json.dayOffset }} day(s) ago, but system access and key card haven't been marked as done.\n\nStart date: {{ $json.startDate }}\nManager: {{ $json.managerEmail }}\n\nTick *itProvisioned* on their employee record once their accounts and key card are ready. This reminder repeats every morning until then.",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "74f59a1e-6ec5-4bbe-8362-846bf5cd8c31",
+      "name": "Mark Onboarding Complete",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "position": [
+        1344,
+        1952
+      ],
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_BASE_ID",
+          "cachedResultName": "Casa Marindo Onboarding"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_AIRTABLE_TABLE_ID",
+          "cachedResultName": "Employees"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "personalEmail"
+          ],
+          "value": {
+            "personalEmail": "={{ $json.personalEmail }}",
+            "status": "complete",
+            "completedAt": "={{ $now.toUTC().toISO() }}"
+          }
+        },
+        "options": {
+          "typecast": true
+        }
+      }
+    },
+    {
+      "id": "9d5ea255-d45c-4ce8-88be-f0797db5fee2",
+      "name": "Update Progress",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueRegularOutput",
+      "position": [
+        1792,
+        1664
+      ],
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_BASE_ID",
+          "cachedResultName": "Casa Marindo Onboarding"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_AIRTABLE_TABLE_ID",
+          "cachedResultName": "Employees"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "personalEmail"
+          ],
+          "value": {
+            "dayOffset": "={{ $('Decide Action For Today').item.json.dayOffset }}",
+            "lastActionAt": "={{ $now.toUTC().toISO() }}",
+            "lastActionReason": "={{ $('Decide Action For Today').item.json.reason }}",
+            "lastActionType": "={{ $('Decide Action For Today').item.json.actionType }}",
+            "personalEmail": "={{ $('Decide Action For Today').item.json.personalEmail }}"
+          }
+        },
+        "options": {
+          "typecast": true
+        }
+      }
+    },
+    {
+      "id": "86243741-86cb-405d-832c-724929ada659",
+      "name": "Announce Onboarding Complete",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 2000,
+      "onError": "continueRegularOutput",
+      "position": [
+        1568,
+        1952
+      ],
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_SLACK_CHANNEL_ID"
+        },
+        "text": "=:white_check_mark: *Onboarding complete*\n{{ $('Decide Action For Today').item.json.fullName }} - 30 days in, all documents received, IT setup confirmed.",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "5c9b1edb-735f-41c1-a194-73ff8ead5b7a",
+      "name": "Log Daily Action",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueRegularOutput",
+      "position": [
+        2016,
+        1664
+      ],
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "cachedResultName": "Onboarding Automation"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Daily Actions Log"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "actionType": "={{ $('Decide Action For Today').item.json.actionType }}",
+            "dayOffset": "={{ $('Decide Action For Today').item.json.dayOffset }}",
+            "executionId": "={{ $execution.id }}",
+            "fullName": "={{ $('Decide Action For Today').item.json.fullName }}",
+            "personalEmail": "={{ $('Decide Action For Today').item.json.personalEmail }}",
+            "ranAt": "={{ $now.toUTC().toISO() }}",
+            "reason": "={{ $('Decide Action For Today').item.json.reason }}"
+          },
+          "schema": [
+            {
+              "id": "ranAt",
+              "displayName": "ranAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "fullName",
+              "displayName": "fullName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "personalEmail",
+              "displayName": "personalEmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "actionType",
+              "displayName": "actionType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "dayOffset",
+              "displayName": "dayOffset",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "reason",
+              "displayName": "reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "executionId",
+              "displayName": "executionId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {
+          "cellFormat": "RAW"
+        }
+      }
+    },
+    {
+      "id": "815e4654-1fe8-460b-8216-23a42378271c",
+      "name": "HR Assistant Chat",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        3008,
+        464
+      ],
+      "parameters": {
+        "options": {
+          "responseMode": "streaming"
+        }
+      }
+    },
+    {
+      "id": "bc7db2e3-e6b5-47b9-9889-8667f71ea38f",
+      "name": "HR Assistant (AI)",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        3296,
+        256
+      ],
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "You are the company HR assistant. Answer questions about company policy using ONLY the HR Policy Knowledge Base tool. Quote the relevant policy wording and name the document you took it from. If the knowledge base does not contain the answer, say plainly that the policy does not cover it and tell them to contact the People Team - never guess, never fill gaps with general employment knowledge, and never state a number, deadline or entitlement that is not in a retrieved document. Keep answers short and specific."
+        }
+      }
+    },
+    {
+      "id": "b34878c6-4c79-4739-98e7-c5dd1228a209",
+      "name": "AI Model - HR Assistant",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        3232,
+        480
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5.4",
+          "cachedResultName": "gpt-5.4"
+        },
+        "builtInTools": {},
+        "options": {
+          "temperature": 0.2
+        }
+      }
+    },
+    {
+      "id": "2c668838-d3ab-44b2-b8c3-61677370051d",
+      "name": "Chat Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        3456,
+        480
+      ],
+      "parameters": {
+        "contextWindowLength": 8
+      }
+    },
+    {
+      "id": "34330a86-5867-45e8-9357-66a347aaf0fe",
+      "name": "Search HR Policies",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        3680,
+        480
+      ],
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Search the company HR policy documents. Use this for any question about leave, overtime, benefits, expenses, remote work, probation, conduct or payroll. Always use this tool before answering a policy question - never answer from general knowledge.",
+        "memoryKey": {
+          "__rl": true,
+          "mode": "list",
+          "value": "hr_policies",
+          "cachedResultName": "hr_policies"
+        },
+        "topK": 5
+      }
+    },
+    {
+      "id": "889653b2-3e39-4677-8bbc-2dc6590250b7",
+      "name": "OpenAI - Prepare Search",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        3680,
+        688
+      ],
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "50aa9569-afcc-497c-9e9b-4176fa8463a9",
+      "name": "Load HR Policies (Run Manually)",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        3008,
+        1232
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "e5205031-547f-4317-a4e5-ab10e6743fb7",
+      "name": "Download Policy Document",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "position": [
+        3232,
+        1232
+      ],
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_DRIVE_FILE_ID",
+          "cachedResultName": "Casa Marindo Hotel Group - Employee Handbook & HR Policies"
+        },
+        "options": {
+          "binaryPropertyName": "data",
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "text/plain"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "dc465aae-42f6-4ddf-bbcb-301b2b3be2cc",
+      "name": "Save Policies For Search",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        3456,
+        1120
+      ],
+      "parameters": {
+        "mode": "insert",
+        "memoryKey": {
+          "__rl": true,
+          "mode": "list",
+          "value": "hr_policies",
+          "cachedResultName": "hr_policies"
+        },
+        "clearStore": true
+      }
+    },
+    {
+      "id": "0b653e0c-2558-4167-8dd9-7ab54ab312cc",
+      "name": "OpenAI - Prepare Policies",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        3456,
+        1344
+      ],
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "9b65bcfe-08f0-477d-8d55-5bc77a63353b",
+      "name": "Read Policy Document",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        3680,
+        1344
+      ],
+      "parameters": {
+        "dataType": "binary",
+        "options": {}
+      }
+    },
+    {
+      "id": "9af58927-3046-4b04-9a41-8c222459a396",
+      "name": "When Workflow Fails",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        3008,
+        1872
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "cac78c36-062f-44b0-95d6-4ea1b27f5808",
+      "name": "Build Error Summary",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3232,
+        1872
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "z1",
+              "name": "workflowName",
+              "value": "={{ $json.workflow.name }}",
+              "type": "string"
+            },
+            {
+              "id": "z2",
+              "name": "failedNode",
+              "value": "={{ $json.execution.lastNodeExecuted }}",
+              "type": "string"
+            },
+            {
+              "id": "z3",
+              "name": "errorMessage",
+              "value": "={{ $json.execution.error.message }}",
+              "type": "string"
+            },
+            {
+              "id": "z4",
+              "name": "executionUrl",
+              "value": "={{ $json.execution.url }}",
+              "type": "string"
+            },
+            {
+              "id": "z5",
+              "name": "executionId",
+              "value": "={{ $json.execution.id }}",
+              "type": "string"
+            },
+            {
+              "id": "z6",
+              "name": "failedAt",
+              "value": "={{ $now.toUTC().toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "309775d7-9f72-4ace-98e5-b702b4efd51a",
+      "name": "Alert - Workflow Failed",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "position": [
+        3456,
+        1776
+      ],
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_SLACK_CHANNEL_ID"
+        },
+        "text": "=:rotating_light: *Onboarding workflow failed*\nWorkflow: {{ $json.workflowName }}\nStep that failed: *{{ $json.failedNode }}*\nError: {{ $json.errorMessage }}\nRun ID: {{ $json.executionId }}\n{{ $json.executionUrl }}\n\nIf this happened during the new hire form, the employee record may exist without its tasks or documents. Check the Employees table for that person and compare with Onboarding Tasks.",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "102dd932-af49-42a9-9d33-702c6a6061f6",
+      "name": "Save To Error Log",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueRegularOutput",
+      "position": [
+        3456,
+        1968
+      ],
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "cachedResultName": "Onboarding Automation"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Error Log"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "failedAt": "={{ $('Build Error Summary').item.json.failedAt }}",
+            "workflowName": "={{ $('Build Error Summary').item.json.workflowName }}",
+            "failedNode": "={{ $('Build Error Summary').item.json.failedNode }}",
+            "errorMessage": "={{ $('Build Error Summary').item.json.errorMessage }}",
+            "executionUrl": "={{ $('Build Error Summary').item.json.executionUrl }}",
+            "executionId": "={{ $('Build Error Summary').item.json.executionId }}"
+          },
+          "schema": [
+            {
+              "id": "failedAt",
+              "displayName": "failedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "workflowName",
+              "displayName": "workflowName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "failedNode",
+              "displayName": "failedNode",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "errorMessage",
+              "displayName": "errorMessage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "executionUrl",
+              "displayName": "executionUrl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "executionId",
+              "displayName": "executionId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {
+          "cellFormat": "RAW"
+        }
+      }
+    },
+    {
+      "id": "b33d6d81-e6c2-435f-9ef8-7b28387bc654",
+      "name": "Sticky Note f510ece1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2400,
+        0
+      ],
+      "parameters": {
+        "content": "## Setup needed\n\n**Airtable** - base is already connected. Create three tables:\n\n**Employees** - personalEmail (unique), fullName, workEmail, role, department, managerEmail, location, startDate, employmentType, taskCount, documentCount, folderUrl, itProvisioned (checkbox), status, createdAt, completedAt, lastActionType, lastActionReason, lastActionAt, dayOffset\n\n**Onboarding Tasks** - taskKey (unique, format: email::task title), employeeEmail, title, owner, dueDate, status\n\n**Onboarding Documents** - documentKey (unique, format: email::documentName), employeeEmail, documentName, status, requestedAt, receivedAt, fileUrl\n\n**Google Sheets** - a file named \"Onboarding Automation\" with tabs: Onboarding Log, Daily Actions Log, Error Log. Connect a Google Sheets credential.\n\n**Google Drive and Calendar** - choose the parent folder and the calendar in those steps, and the folder for uploaded documents in **Save Document To Drive**.\n\n**HR assistant** - run **Load HR Policies (Run Manually)** once, and again after every n8n restart. The policies are only kept in memory.\n\n**Intake form login** - the new hire form is HR-only. Create a Basic Auth credential and select it in **New Hire Intake Form**. The document upload form stays open for new hires, but only accepts emails already in the Employees table.\n\n**Errors** - already wired: Settings > Error Workflow points at this workflow. Re-select it if you import a copy.",
+        "height": 700,
+        "width": 520,
+        "color": 3
+      }
+    },
+    {
+      "id": "bba10cc1-182b-4b49-8ea5-aeeac3505158",
+      "name": "Sticky Note c964523c",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2400,
+        752
+      ],
+      "parameters": {
+        "content": "## Why the plan is split into rows\n\nThe plan step produces a list of tasks and a list of documents. Two side branches turn these into one Airtable row per task and one per document.\n\nThat's the whole point: you can't follow up on something you never recorded. A checklist inside an email can't be tracked - separate rows with owners and due dates can.\n\nBoth branches match rows by personal email, so they don't have to wait for the employee record to be created first.",
+        "height": 320,
+        "width": 520,
+        "color": 5
+      }
+    },
+    {
+      "id": "9c89ead9-dc95-4c9a-ab20-35f94cd523a8",
+      "name": "Sticky Note 7f558d6b",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2400,
+        1104
+      ],
+      "parameters": {
+        "content": "## What the daily check sends\n\n**Decide Action For Today** looks at everyone still onboarding (all outstanding documents are fetched in one go, so nobody is skipped):\n\n1. **One email to the new hire, max.** Milestone days (7 days before, day 0, 3, 7, 30) get the milestone email, with any missing documents listed inside it. Other days, missing documents get a reminder.\n2. **Remind IT** - runs alongside, in Slack. Missing documents never hold up the key card and system access chase.\n3. **Mark complete** - 30 days in, all documents in, IT confirmed.\n\nIf no one is currently onboarding, the daily run simply stops.",
+        "height": 400,
+        "width": 520,
+        "color": 4
+      }
+    },
+    {
+      "id": "cbffa966-c86a-4b2b-93e7-7262bc9e2c49",
+      "name": "Phase 1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        0
+      ],
+      "parameters": {
+        "content": "## 1 · New hire form, check & plan\n\nHR fills in the new hire form. If the personal email, shift manager or start date is missing, onboarding stops and HR is alerted - nobody gets half set up.\n\n**Generate Onboarding Plan** decides everything: based on the role, it builds the task list and document list. To change what each hotel role needs, edit it here only.",
+        "height": 816,
+        "width": 940,
+        "color": 7
+      }
+    },
+    {
+      "id": "d2ce06bc-a772-492d-a2d4-5e82bd5978d2",
+      "name": "Phase 2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        912,
+        0
+      ],
+      "parameters": {
+        "content": "## 2 · Set everything up\n\nCreates a private Drive folder, the employee record, a Day 1 orientation in the calendar, a Slack message to IT and the shift manager, a welcome email to the new hire, then a log entry.\n\nEach step is set to keep going if it fails - a failed calendar invite shouldn't stop the welcome email.",
+        "height": 300,
+        "width": 1440,
+        "color": 4
+      }
+    },
+    {
+      "id": "3ab8ceed-4bd4-4799-9da1-a6f2deb95e73",
+      "name": "Phase 3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        912,
+        320
+      ],
+      "parameters": {
+        "content": "## 3 · Turn the plan into trackable rows\n\nThe task list and document list become one Airtable row each.\n\nThat's the whole point: you can't follow up on what you never recorded. A checklist in an email can't be tracked - task rows with owners and due dates can.\n\nDocuments already **received** are skipped, so resubmitting the form never resets them to outstanding. Both branches match by personal email, so they don't wait for the employee record.",
+        "height": 496,
+        "width": 1440,
+        "color": 6
+      }
+    },
+    {
+      "id": "8c5a9cd9-9530-49c1-a513-447faded4ebf",
+      "name": "Phase 4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        832
+      ],
+      "parameters": {
+        "content": "## 4 · Document upload\n\nA separate form for the new hire. They choose which document they're sending and upload it. The email is cleaned up (trimmed, lowercased) and **must match a new hire in the Employees table** - anything else is ignored and HR is told, so the form can't be used to drop files into Drive.\n\nThe file is saved to Google Drive, and the matching Airtable row changes to \"received\" with a link to the file. This is what stops the daily reminders.",
+        "height": 482,
+        "width": 1600,
+        "color": 5
+      }
+    },
+    {
+      "id": "1fc3b7b7-f6ba-4dff-8ea0-47cbf2c1ebbd",
+      "name": "Phase 5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        1328
+      ],
+      "parameters": {
+        "content": "## 5 · Daily check - makes sure nothing is forgotten\n\nRuns every day at 8:00. All outstanding documents are fetched once, so every person still onboarding is checked.\n\n1. **One email to the new hire, max** - milestone email on day -7, 0 (start day), 3, 7 and 30, with any missing documents listed inside it. On other days, a missing-documents reminder.\n2. **Remind IT** - in Slack, alongside the email. Missing documents never block the key card and system access chase.\n3. **Mark complete** - 30 days in, all documents in, IT confirmed.\n\n**If no one is onboarding, the daily run simply stops.**",
+        "height": 856,
+        "width": 2280,
+        "color": 3
+      }
+    },
+    {
+      "id": "3e0a4e1e-69ba-45ed-8198-60de9819d980",
+      "name": "Phase 6",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2960,
+        0
+      ],
+      "parameters": {
+        "content": "## 6 · HR assistant - answers only from company policy\n\nAn internal chat for the People Team - it runs inside n8n and is not public, so new-hire emails point people to the People Team instead. It answers policy questions using only the uploaded HR documents.\n\nIt's told never to answer from general knowledge. If the policy doesn't cover something, it says so and points to the People Team.\n\nThis matters: a confident wrong answer about notice periods, tips or rest breaks is a legal problem, not just a support issue.",
+        "height": 840,
+        "width": 1008,
+        "color": 2
+      }
+    },
+    {
+      "id": "6e3adaba-eea8-422a-bb6a-4af367d08d9a",
+      "name": "Phase 7",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2960,
+        880
+      ],
+      "parameters": {
+        "content": "## 7 · Load HR policies - run manually\n\nDownloads the policy document, splits it into sections and prepares it so the HR assistant can search it.\n\n**The policies are kept in memory only** and are lost when n8n restarts. Run this again after any restart or policy change, or the assistant will have nothing to search.\n\nFor real use, switch to a permanent database such as Supabase or Pinecone.",
+        "height": 600,
+        "width": 1008
+      }
+    },
+    {
+      "id": "29dcf879-ceed-4b7e-bfec-102ea985045e",
+      "name": "Phase 8",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2960,
+        1520
+      ],
+      "parameters": {
+        "content": "## 8 · If something breaks\n\nThis branch runs whenever a live run fails. It works because the workflow is its own error workflow (**Settings > Error Workflow = this workflow**). If you import or duplicate it, select the copy there again.\n\nIt sends a Slack alert with the failed step and a link, and logs it to the Error Log tab.\n\nOnly runs for live runs, not manual tests.",
+        "height": 628,
+        "width": 1008,
+        "color": 3
+      }
+    },
+    {
+      "id": "28d688fd-9dc0-4f4e-bde9-a10c01c3956d",
+      "name": "Save Document To Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "position": [
+        912,
+        992
+      ],
+      "parameters": {
+        "inputDataFieldName": "document",
+        "name": "={{ $json.employeeEmail }} - {{ $json.documentName }} - {{ $binary.document?.fileName ?? 'upload' }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_DRIVE_ID"
+        },
+        "folderId": {
+          "__rl": true,
+          "cachedResultName": "/ (Root folder)",
+          "mode": "list",
+          "value": "YOUR_DRIVE_FOLDER_ID"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "d5e6f7a8-1111-4c2d-8e3f-2a3b4c5d6e01",
+      "name": "Find New Hire",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "position": [
+        224,
+        1008
+      ],
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_BASE_ID",
+          "cachedResultName": "Casa Marindo Onboarding"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_AIRTABLE_TABLE_ID",
+          "cachedResultName": "Employees"
+        },
+        "filterByFormula": "=LOWER(TRIM({personalEmail})) = \"{{ String($json.employeeEmail ?? '').trim().toLowerCase().replace(/\"/g, '') }}\"",
+        "returnAll": false,
+        "limit": 1,
+        "options": {}
+      }
+    },
+    {
+      "id": "d5e6f7a8-2222-4c2d-8e3f-2a3b4c5d6e02",
+      "name": "Known New Hire?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        1008
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ String($json.id ?? '') }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "id": "condition-1792468427604-mrhcmb2xh"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "d5e6f7a8-3333-4c2d-8e3f-2a3b4c5d6e03",
+      "name": "Attach Uploaded File",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        688,
+        992
+      ],
+      "parameters": {
+        "jsCode": "// The lookup replaced the form data, so put the upload (and a cleaned-up\n// email) back on the item for the Drive upload.\nconst form = $('Document Upload Form').first();\nreturn [{\n  json: Object.assign({}, form.json, { employeeEmail: String(form.json.employeeEmail || '').trim().toLowerCase() }),\n  binary: form.binary\n}];"
+      }
+    },
+    {
+      "id": "d5e6f7a8-4444-4c2d-8e3f-2a3b4c5d6e04",
+      "name": "Alert HR - Upload From Unknown Email",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 2000,
+      "onError": "continueRegularOutput",
+      "position": [
+        688,
+        1136
+      ],
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_SLACK_CHANNEL_ID"
+        },
+        "text": "=:no_entry_sign: *Onboarding upload ignored - email not on file*\nSomeone uploaded *{{ $('Document Upload Form').item.json.documentName }}* using {{ $('Document Upload Form').item.json.employeeEmail }}, which isn't a new hire's personal email in the Employees table. The file was NOT saved.\n\nIf this is a real new hire with a typo, ask them to upload again using the email their welcome message was sent to.",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "d5e6f7a8-5555-4c2d-8e3f-2a3b4c5d6e05",
+      "name": "Find Received Document Records",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "position": [
+        960,
+        640
+      ],
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_BASE_ID",
+          "cachedResultName": "Casa Marindo Onboarding"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_AIRTABLE_TABLE_ID",
+          "cachedResultName": "Onboarding Documents"
+        },
+        "filterByFormula": "=AND(LOWER({employeeEmail}) = \"{{ $json.personalEmail }}\", {status} = \"received\")",
+        "options": {}
+      }
+    },
+    {
+      "id": "d5e6f7a8-6666-4c2d-8e3f-2a3b4c5d6e06",
+      "name": "Documents Still Needed",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1424,
+        640
+      ],
+      "parameters": {
+        "jsCode": "// One row per document - but skip any the new hire already uploaded, so\n// resubmitting the intake form never resets a received document to outstanding.\nconst plan = $('Generate Onboarding Plan').first().json.planDocuments || [];\nconst received = new Set(\n  $('Find Received Documents').all()\n    .map(r => String((r.json || {}).documentKey || '').toLowerCase())\n    .filter(Boolean)\n);\nreturn plan\n  .filter(d => !received.has(String(d.documentKey).toLowerCase()))\n  .map(d => ({ json: d }));"
+      }
+    },
+    {
+      "id": "a8b9c0d1-flat-4e2f-9a3b-cmflatppl001",
+      "name": "Find People Still Onboarding",
+      "notes": "Flattens the Airtable search result so later steps read fields by name.",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        336,
+        1680
+      ],
+      "parameters": {
+        "jsCode": "// Airtable search returns { id, createdTime, fields: {...} }. Flatten it so\n// later steps can read the record's fields directly by name.\nreturn $input.all().map((it, i) => {\n  const j = it.json || {};\n  const flat = j.fields ? Object.assign({ id: j.id, createdTime: j.createdTime }, j.fields) : j;\n  return { json: flat, pairedItem: { item: i } };\n});"
+      }
+    },
+    {
+      "id": "a8b9c0d1-flat-4e2f-9a3b-cmflatdoc001",
+      "name": "Find Missing Documents",
+      "notes": "Flattens the Airtable search result so later steps read fields by name.",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        1680
+      ],
+      "parameters": {
+        "jsCode": "// Airtable search returns { id, createdTime, fields: {...} }. Flatten it so\n// later steps can read the record's fields directly by name.\nreturn $input.all().map((it, i) => {\n  const j = it.json || {};\n  const flat = j.fields ? Object.assign({ id: j.id, createdTime: j.createdTime }, j.fields) : j;\n  return { json: flat, pairedItem: { item: i } };\n});"
+      }
+    },
+    {
+      "id": "a8b9c0d1-flat-4e2f-9a3b-cmflatrcv001",
+      "name": "Find Received Documents",
+      "notes": "Flattens the Airtable search result so later steps read fields by name.",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1184,
+        640
+      ],
+      "parameters": {
+        "jsCode": "// Airtable search returns { id, createdTime, fields: {...} }. Flatten it so\n// later steps can read the record's fields directly by name.\nreturn $input.all().map((it, i) => {\n  const j = it.json || {};\n  const flat = j.fields ? Object.assign({ id: j.id, createdTime: j.createdTime }, j.fields) : j;\n  return { json: flat, pairedItem: { item: i } };\n});"
+      }
+    }
+  ],
+  "connections": {
+    "New Hire Intake Form": {
+      "main": [
+        [
+          {
+            "node": "Clean Up New Hire Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Details Complete?": {
+      "main": [
+        [
+          {
+            "node": "Generate Onboarding Plan",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Alert HR - Form Incomplete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Onboarding Plan": {
+      "main": [
+        [
+          {
+            "node": "Create Onboarding Folder",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "One Row Per Task",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Find Received Document Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Onboarding Folder": {
+      "main": [
+        [
+          {
+            "node": "Create Employee Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Employee Record": {
+      "main": [
+        [
+          {
+            "node": "Book Day 1 Orientation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify IT And Manager": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Welcome Email": {
+      "main": [
+        [
+          {
+            "node": "Log Onboarding Started",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Document Received": {
+      "main": [
+        [
+          {
+            "node": "Notify HR - Document Received",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Onboarding Complete": {
+      "main": [
+        [
+          {
+            "node": "Announce Onboarding Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Progress": {
+      "main": [
+        [
+          {
+            "node": "Log Daily Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Announce Onboarding Complete": {
+      "main": [
+        [
+          {
+            "node": "Update Progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HR Assistant Chat": {
+      "main": [
+        [
+          {
+            "node": "HR Assistant (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Policy Document": {
+      "main": [
+        [
+          {
+            "node": "Save Policies For Search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Error Summary": {
+      "main": [
+        [
+          {
+            "node": "Alert - Workflow Failed",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Save To Error Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Up New Hire Details": {
+      "main": [
+        [
+          {
+            "node": "Details Complete?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Book Day 1 Orientation": {
+      "main": [
+        [
+          {
+            "node": "Notify IT And Manager",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "One Row Per Task": {
+      "main": [
+        [
+          {
+            "node": "Save Tasks To Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Every Day At 8:00": {
+      "main": [
+        [
+          {
+            "node": "Find People Still Onboarding Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route By Action": {
+      "main": [
+        [
+          {
+            "node": "Email New Hire",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Email New Hire",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Remind IT - Access & Key Card Overdue",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark Onboarding Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remind IT - Access & Key Card Overdue": {
+      "main": [
+        [
+          {
+            "node": "Update Progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Model - HR Assistant": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "HR Assistant (AI)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "HR Assistant (AI)",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search HR Policies": {
+      "ai_tool": [
+        [
+          {
+            "node": "HR Assistant (AI)",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI - Prepare Search": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Search HR Policies",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load HR Policies (Run Manually)": {
+      "main": [
+        [
+          {
+            "node": "Download Policy Document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI - Prepare Policies": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Save Policies For Search",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Policy Document": {
+      "ai_document": [
+        [
+          {
+            "node": "Save Policies For Search",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Workflow Fails": {
+      "main": [
+        [
+          {
+            "node": "Build Error Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email New Hire": {
+      "main": [
+        [
+          {
+            "node": "Update Progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decide Action For Today": {
+      "main": [
+        [
+          {
+            "node": "Route By Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Document To Drive": {
+      "main": [
+        [
+          {
+            "node": "Mark Document Received",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Document Upload Form": {
+      "main": [
+        [
+          {
+            "node": "Find New Hire",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find New Hire": {
+      "main": [
+        [
+          {
+            "node": "Known New Hire?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Known New Hire?": {
+      "main": [
+        [
+          {
+            "node": "Attach Uploaded File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Alert HR - Upload From Unknown Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Attach Uploaded File": {
+      "main": [
+        [
+          {
+            "node": "Save Document To Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Documents Still Needed": {
+      "main": [
+        [
+          {
+            "node": "Save Document Checklist To Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find People Still Onboarding Records": {
+      "main": [
+        [
+          {
+            "node": "Find People Still Onboarding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find People Still Onboarding": {
+      "main": [
+        [
+          {
+            "node": "Find Missing Document Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Missing Document Records": {
+      "main": [
+        [
+          {
+            "node": "Find Missing Documents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Missing Documents": {
+      "main": [
+        [
+          {
+            "node": "Decide Action For Today",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Received Document Records": {
+      "main": [
+        [
+          {
+            "node": "Find Received Documents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Received Documents": {
+      "main": [
+        [
+          {
+            "node": "Documents Still Needed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Manila",
+    "binaryMode": "separate"
+  },
+  "pinData": {}
+}
