@@ -340,7 +340,7 @@
         512
       ],
       "parameters": {
-        "authentication": "oAuth2",
+        "authentication": "accessToken",
         "select": "channel",
         "channelId": {
           "__rl": true,
@@ -486,7 +486,7 @@
         160
       ],
       "parameters": {
-        "authentication": "oAuth2",
+        "authentication": "accessToken",
         "select": "channel",
         "channelId": {
           "__rl": true,
@@ -896,7 +896,7 @@
         992
       ],
       "parameters": {
-        "authentication": "oAuth2",
+        "authentication": "accessToken",
         "select": "channel",
         "channelId": {
           "__rl": true,
@@ -1158,7 +1158,7 @@
         1760
       ],
       "parameters": {
-        "authentication": "oAuth2",
+        "authentication": "accessToken",
         "select": "channel",
         "channelId": {
           "__rl": true,
@@ -1270,7 +1270,7 @@
         1952
       ],
       "parameters": {
-        "authentication": "oAuth2",
+        "authentication": "accessToken",
         "select": "channel",
         "channelId": {
           "__rl": true,
@@ -1655,7 +1655,7 @@
         1776
       ],
       "parameters": {
-        "authentication": "oAuth2",
+        "authentication": "accessToken",
         "select": "channel",
         "channelId": {
           "__rl": true,
@@ -2062,7 +2062,7 @@
         1136
       ],
       "parameters": {
-        "authentication": "oAuth2",
+        "authentication": "accessToken",
         "select": "channel",
         "channelId": {
           "__rl": true,

@@ -36,7 +36,7 @@ Triggers: `New Hire Intake Form`, `Document Upload Form`, `Every Day At 8:00`, `
 2. Create these credentials and select them on the nodes that need them:
 
    - Airtable (personal access token) (10 nodes)
-   - Slack (OAuth2) (7 nodes)
+   - Slack API (bot token) (7 nodes): a Slack app's bot token, with the bot invited to the channel
    - Google Drive (OAuth2) (3 nodes)
    - Google Sheets (OAuth2) (3 nodes)
    - OpenAI (3 nodes)
