@@ -914,7 +914,7 @@
       "typeVersion": 1.4,
       "position": [
         0,
-        1680
+        1616
       ],
       "parameters": {
         "rule": {
@@ -937,7 +937,7 @@
       "onError": "continueRegularOutput",
       "position": [
         192,
-        1680
+        1616
       ],
       "parameters": {
         "operation": "search",
@@ -979,7 +979,7 @@
       "onError": "continueRegularOutput",
       "position": [
         512,
-        1680
+        1616
       ],
       "parameters": {
         "operation": "search",
@@ -1006,7 +1006,7 @@
       "typeVersion": 2,
       "position": [
         928,
-        1680
+        1616
       ],
       "parameters": {
         "jsCode": "const employees = $('Find People Still Onboarding').all();\nconst docRows = $('Find Missing Documents').all();\n\n// All outstanding documents, grouped by employee email.\n// Fetched once per run so nobody drops out of the daily check.\nconst missingByEmail = {};\nfor (const r of docRows) {\n  const d = r.json || {};\n  if (!d.id || !d.employeeEmail) continue;\n  const key = String(d.employeeEmail).toLowerCase();\n  if (!missingByEmail[key]) missingByEmail[key] = [];\n  missingByEmail[key].push(d.documentName || 'document');\n}\n\nconst DAY = 86400000;\n// Day 0 = start date (orientation day)\nconst milestoneDays = [-7, 0, 3, 7, 30];\nconst helpLine = 'If you have a question about policy, leave, benefits or expenses, just reply to this email and the People Team will help.';\nconst out = [];\n\nfor (const e of employees) {\n  const emp = e.json || {};\n  if (!emp.personalEmail) continue;\n\n  const missing = missingByEmail[String(emp.personalEmail).toLowerCase()] || [];\n  const hasOutstandingDocs = missing.length > 0;\n\n  const startMs = new Date(emp.startDate).getTime();\n  let dayOffset = 9999;\n  if (!isNaN(startMs)) { dayOffset = Math.floor((Date.now() - startMs) / DAY); }\n\n  const itDone = emp.itProvisioned === true || String(emp.itProvisioned).toLowerCase() === 'true';\n\n  const base = {\n    employeeRecordId: emp.id,\n    personalEmail: emp.personalEmail,\n    fullName: emp.fullName,\n    role: emp.role,\n    department: emp.department,\n    managerEmail: emp.managerEmail,\n    startDate: emp.startDate,\n    itProvisioned: itDone,\n    hasOutstandingDocs: hasOutstandingDocs,\n    outstandingDocs: missing.join(', '),\n    dayOffset: dayOffset,\n    emailSubject: '',\n    emailBody: ''\n  };\n\n  // 1) At most ONE email to the new hire per day.\n  //    Milestone days win, and the missing-documents note rides along in the same email.\n  const isMilestone = milestoneDays.indexOf(dayOffset) > -1;\n  const docsNote = hasOutstandingDocs ? '\\n\\nStill needed from you: ' + missing.join(', ') + '. Please upload them using the link below, one document at a time.' : '';\n\n  if (isMilestone) {\n    let subject = '';\n    let body = '';\n    if (dayOffset === -7) {\n      subject = 'One week to go';\n      body = 'Your first day is a week away. Your accounts are being prepared, and your day-one orientation is already in your calendar.';\n    } else if (dayOffset === 0) {\n      subject = 'Welcome - today is your first day';\n      body = 'Welcome. Your orientation session is today at 9:00. Your manager and onboarding buddy are expecting you.';\n    } else if (dayOffset === 3) {\n      subject = 'Resources for your first week';\n      body = 'A few things worth bookmarking this week: the handbook, the benefits portal, and the expense process. If you are unsure about any policy, ask the People Team rather than guessing.';\n    } else if (dayOffset === 7) {\n      subject = 'How is week one going?';\n      body = 'You have been here a week. Is anything still blocking you - access, equipment, or clarity on your duties? Reply to this email and we will sort it.';\n    } else if (dayOffset === 30) {\n      subject = 'Your 30-day check-in';\n      body = 'You are a month in. We would like your honest view on how onboarding went - what helped, and what was missing. Your answer improves things for the next person.';\n    }\n    out.push({ json: Object.assign({}, base, {\n      actionType: 'milestone_email',\n      reason: 'day ' + dayOffset + ' check-in email' + (hasOutstandingDocs ? ' (with missing-documents note)' : ''),\n      emailSubject: subject,\n      emailBody: body + docsNote + '\\n\\n' + helpLine\n    }), pairedItem: { item: 0 } });\n  } else if (hasOutstandingDocs && dayOffset >= -7) {\n    out.push({ json: Object.assign({}, base, {\n      actionType: 'chase_documents',\n      reason: missing.length + ' required document(s) still missing',\n      emailSubject: 'Still needed before your first day',\n      emailBody: 'We are still missing these onboarding documents from you: ' + missing.join(', ') + '.\\n\\nPlease upload them using the document upload form, one document at a time.\\n\\nPayroll and system access cannot be finished until these are in, so the sooner the better.'\n    }), pairedItem: { item: 0 } });\n  }\n\n  // 2) IT reminder goes to Slack, not the new hire, so it runs alongside the email.\n  //    Missing documents must never hold up the key card and system access chase.\n  if (dayOffset >= 0 && !itDone) {\n    out.push({ json: Object.assign({}, base, {\n      actionType: 'chase_it',\n      reason: 'employee has started but IT has not confirmed system access and key card'\n    }), pairedItem: { item: 0 } });\n  }\n\n  // 3) Close out once everything is done.\n  if (dayOffset >= 30 && itDone && !hasOutstandingDocs) {\n    out.push({ json: Object.assign({}, base, {\n      actionType: 'mark_complete',\n      reason: '30 days in, all documents received, IT confirmed'\n    }), pairedItem: { item: 0 } });\n  }\n}\n\nreturn out;"
@@ -1019,7 +1019,7 @@
       "typeVersion": 3.2,
       "position": [
         1136,
-        1648
+        1584
       ],
       "parameters": {
         "rules": {
@@ -1132,7 +1132,7 @@
       "onError": "continueRegularOutput",
       "position": [
         1568,
-        1568
+        1472
       ],
       "parameters": {
         "sendTo": "={{ $json.personalEmail }}",
@@ -1155,7 +1155,7 @@
       "onError": "continueRegularOutput",
       "position": [
         1568,
-        1760
+        1648
       ],
       "parameters": {
         "authentication": "accessToken",
@@ -1179,7 +1179,7 @@
       "waitBetweenTries": 2000,
       "position": [
         1344,
-        1952
+        1840
       ],
       "parameters": {
         "operation": "upsert",
@@ -1222,7 +1222,7 @@
       "onError": "continueRegularOutput",
       "position": [
         1792,
-        1664
+        1600
       ],
       "parameters": {
         "operation": "upsert",
@@ -1267,7 +1267,7 @@
       "onError": "continueRegularOutput",
       "position": [
         1568,
-        1952
+        1840
       ],
       "parameters": {
         "authentication": "accessToken",
@@ -1292,7 +1292,7 @@
       "onError": "continueRegularOutput",
       "position": [
         2016,
-        1664
+        1600
       ],
       "parameters": {
         "operation": "append",
@@ -1395,7 +1395,7 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.4,
       "position": [
-        3008,
+        2416,
         464
       ],
       "parameters": {
@@ -1410,7 +1410,7 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        3296,
+        2704,
         256
       ],
       "parameters": {
@@ -1427,7 +1427,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        3232,
+        2640,
         480
       ],
       "parameters": {
@@ -1449,7 +1449,7 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.4,
       "position": [
-        3456,
+        2864,
         480
       ],
       "parameters": {
@@ -1462,7 +1462,7 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
       "typeVersion": 1.3,
       "position": [
-        3680,
+        3088,
         480
       ],
       "parameters": {
@@ -1483,7 +1483,7 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1.2,
       "position": [
-        3680,
+        3088,
         688
       ],
       "parameters": {
@@ -1496,8 +1496,8 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        3008,
-        1232
+        2448,
+        1152
       ],
       "parameters": {}
     },
@@ -1510,8 +1510,8 @@
       "maxTries": 3,
       "waitBetweenTries": 2000,
       "position": [
-        3232,
-        1232
+        2672,
+        1152
       ],
       "parameters": {
         "operation": "download",
@@ -1537,8 +1537,8 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
       "typeVersion": 1.3,
       "position": [
-        3456,
-        1120
+        2896,
+        1040
       ],
       "parameters": {
         "mode": "insert",
@@ -1557,8 +1557,8 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1.2,
       "position": [
-        3456,
-        1344
+        2896,
+        1264
       ],
       "parameters": {
         "options": {}
@@ -1570,8 +1570,8 @@
       "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
       "typeVersion": 1.1,
       "position": [
-        3680,
-        1344
+        3120,
+        1264
       ],
       "parameters": {
         "dataType": "binary",
@@ -1584,8 +1584,8 @@
       "type": "n8n-nodes-base.errorTrigger",
       "typeVersion": 1,
       "position": [
-        3008,
-        1872
+        2448,
+        1712
       ],
       "parameters": {}
     },
@@ -1595,8 +1595,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3232,
-        1872
+        2672,
+        1712
       ],
       "parameters": {
         "assignments": {
@@ -1651,8 +1651,8 @@
       "maxTries": 3,
       "waitBetweenTries": 2000,
       "position": [
-        3456,
-        1776
+        2896,
+        1616
       ],
       "parameters": {
         "authentication": "accessToken",
@@ -1676,8 +1676,8 @@
       "waitBetweenTries": 2000,
       "onError": "continueRegularOutput",
       "position": [
-        3456,
-        1968
+        2896,
+        1808
       ],
       "parameters": {
         "operation": "append",
@@ -1770,7 +1770,7 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        2400,
+        3392,
         0
       ],
       "parameters": {
@@ -1786,8 +1786,8 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        2400,
-        752
+        3392,
+        720
       ],
       "parameters": {
         "content": "## Why the plan is split into rows\n\nThe plan step produces a list of tasks and a list of documents. Two side branches turn these into one Airtable row per task and one per document.\n\nThat's the whole point: you can't follow up on something you never recorded. A checklist inside an email can't be tracked - separate rows with owners and due dates can.\n\nBoth branches match rows by personal email, so they don't have to wait for the employee record to be created first.",
@@ -1802,8 +1802,8 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        2400,
-        1104
+        3392,
+        1056
       ],
       "parameters": {
         "content": "## What the daily check sends\n\n**Decide Action For Today** looks at everyone still onboarding (all outstanding documents are fetched in one go, so nobody is skipped):\n\n1. **One email to the new hire, max.** Milestone days (7 days before, day 0, 3, 7, 30) get the milestone email, with any missing documents listed inside it. Other days, missing documents get a reminder.\n2. **Remind IT** - runs alongside, in Slack. Missing documents never hold up the key card and system access chase.\n3. **Mark complete** - 30 days in, all documents in, IT confirmed.\n\nIf no one is currently onboarding, the daily run simply stops.",
@@ -1839,7 +1839,7 @@
       ],
       "parameters": {
         "content": "## 2 · Set everything up\n\nCreates a private Drive folder, the employee record, a Day 1 orientation in the calendar, a Slack message to IT and the shift manager, a welcome email to the new hire, then a log entry.\n\nEach step is set to keep going if it fails - a failed calendar invite shouldn't stop the welcome email.",
-        "height": 300,
+        "height": 316,
         "width": 1440,
         "color": 4
       }
@@ -1872,7 +1872,7 @@
       "parameters": {
         "content": "## 4 · Document upload\n\nA separate form for the new hire. They choose which document they're sending and upload it. The email is cleaned up (trimmed, lowercased) and **must match a new hire in the Employees table** - anything else is ignored and HR is told, so the form can't be used to drop files into Drive.\n\nThe file is saved to Google Drive, and the matching Airtable row changes to \"received\" with a link to the file. This is what stops the daily reminders.",
         "height": 482,
-        "width": 1600,
+        "width": 2400,
         "color": 5
       }
     },
@@ -1887,8 +1887,8 @@
       ],
       "parameters": {
         "content": "## 5 · Daily check - makes sure nothing is forgotten\n\nRuns every day at 8:00. All outstanding documents are fetched once, so every person still onboarding is checked.\n\n1. **One email to the new hire, max** - milestone email on day -7, 0 (start day), 3, 7 and 30, with any missing documents listed inside it. On other days, a missing-documents reminder.\n2. **Remind IT** - in Slack, alongside the email. Missing documents never block the key card and system access chase.\n3. **Mark complete** - 30 days in, all documents in, IT confirmed.\n\n**If no one is onboarding, the daily run simply stops.**",
-        "height": 856,
-        "width": 2280,
+        "height": 712,
+        "width": 2392,
         "color": 3
       }
     },
@@ -1898,7 +1898,7 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        2960,
+        2368,
         0
       ],
       "parameters": {
@@ -1914,11 +1914,11 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        2960,
-        880
+        2368,
+        848
       ],
       "parameters": {
-        "content": "## 7 · Load HR policies - run manually\n\nDownloads the policy document, splits it into sections and prepares it so the HR assistant can search it.\n\n**The policies are kept in memory only** and are lost when n8n restarts. Run this again after any restart or policy change, or the assistant will have nothing to search.\n\nFor real use, switch to a permanent database such as Supabase or Pinecone.",
+        "content": "## 7 · Load HR policies - automatic, or run manually\n\nDownloads the policy document, splits it into sections and prepares it so the HR assistant can search it.\n\n**The policies are kept in memory only**, so a restart wipes them. **Reload HR Policies On Start** loads them again by itself whenever n8n starts, the workflow is switched on, or a new version is published. Run the manual trigger after editing the policy document.\n\nFor real use, switch to a permanent database such as Supabase or Pinecone.",
         "height": 600,
         "width": 1008
       }
@@ -1929,12 +1929,12 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        2960,
-        1520
+        2368,
+        1456
       ],
       "parameters": {
         "content": "## 8 · If something breaks\n\nThis branch runs whenever a live run fails. It works because the workflow is its own error workflow (**Settings > Error Workflow = this workflow**). If you import or duplicate it, select the copy there again.\n\nIt sends a Slack alert with the failed step and a link, and logs it to the Error Log tab.\n\nOnly runs for live runs, not manual tests.",
-        "height": 628,
+        "height": 580,
         "width": 1008,
         "color": 3
       }
@@ -2125,7 +2125,7 @@
       "typeVersion": 2,
       "position": [
         336,
-        1680
+        1616
       ],
       "parameters": {
         "jsCode": "// Airtable search returns { id, createdTime, fields: {...} }. Flatten it so\n// later steps can read the record's fields directly by name.\nreturn $input.all().map((it, i) => {\n  const j = it.json || {};\n  const flat = j.fields ? Object.assign({ id: j.id, createdTime: j.createdTime }, j.fields) : j;\n  return { json: flat, pairedItem: { item: i } };\n});"
@@ -2139,7 +2139,7 @@
       "typeVersion": 2,
       "position": [
         720,
-        1680
+        1616
       ],
       "parameters": {
         "jsCode": "// Airtable search returns { id, createdTime, fields: {...} }. Flatten it so\n// later steps can read the record's fields directly by name.\nreturn $input.all().map((it, i) => {\n  const j = it.json || {};\n  const flat = j.fields ? Object.assign({ id: j.id, createdTime: j.createdTime }, j.fields) : j;\n  return { json: flat, pairedItem: { item: i } };\n});"
@@ -2157,6 +2157,23 @@
       ],
       "parameters": {
         "jsCode": "// Airtable search returns { id, createdTime, fields: {...} }. Flatten it so\n// later steps can read the record's fields directly by name.\nreturn $input.all().map((it, i) => {\n  const j = it.json || {};\n  const flat = j.fields ? Object.assign({ id: j.id, createdTime: j.createdTime }, j.fields) : j;\n  return { json: flat, pairedItem: { item: i } };\n});"
+      }
+    },
+    {
+      "id": "24d7ead9-40fa-4def-828c-986c9f8229b1",
+      "name": "Reload HR Policies On Start",
+      "type": "n8n-nodes-base.n8nTrigger",
+      "typeVersion": 1,
+      "position": [
+        2448,
+        1300
+      ],
+      "parameters": {
+        "events": [
+          "init",
+          "activate",
+          "update"
+        ]
       }
     }
   ],
@@ -2672,12 +2689,23 @@
           }
         ]
       ]
+    },
+    "Reload HR Policies On Start": {
+      "main": [
+        [
+          {
+            "node": "Download Policy Document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
     "executionOrder": "v1",
-    "timezone": "Asia/Manila",
-    "binaryMode": "separate"
+    "binaryMode": "separate",
+    "timezone": "Asia/Manila"
   },
   "pinData": {}
 }

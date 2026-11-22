@@ -25,10 +25,10 @@ Built an n8n workflow where HR fills in one form. It builds the onboarding plan 
 
 | File | What it is |
 |---|---|
-| `workflow.json` | The n8n workflow, 64 nodes, ready to import |
+| `workflow.json` | The n8n workflow, 65 nodes, ready to import |
 | `docs/process-map.svg` | The process map from the case study |
 
-Triggers: `New Hire Intake Form`, `Document Upload Form`, `Every Day At 8:00`, `HR Assistant Chat`, `Load HR Policies (Run Manually)`, `When Workflow Fails`.
+Triggers: `New Hire Intake Form`, `Document Upload Form`, `Every Day At 8:00`, `HR Assistant Chat`, `Load HR Policies (Run Manually)`, `Reload HR Policies On Start`, `When Workflow Fails`.
 
 ## Set it up
 
